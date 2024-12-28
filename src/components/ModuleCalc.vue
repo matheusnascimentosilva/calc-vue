@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import * as math from 'mathjs';
 export default {
     data() {
         return {
@@ -80,27 +81,46 @@ export default {
         },
         equals() {
             try {
-                this.display = eval(this.display).toString();
+                this.display = math.evaluate(this.display).toString();
             } catch (e) {
-                this.error = 'Expressao invalida';
-                this.display = this.error;
+                this.display = 'Erro';
             }
         },
         enter() {
             this.equals();
         },
         space() {
-            this.display +='';
+            this.display += '';
         },
         backspace() {
             this.display = this.display.slice(0, -1);
             if (this.display === '') this.display = '0';
         },
         calculate(operator) {
-            if (this.display.endsWith(operator)) return;
             if (this.display === '0') this.display = '';
-            this.display += operator;
+
+            const operators = ['+', '-', '*', '/', '^', '(', ')', '%'];
+            if (operators.includes(operator)) {
+                this.display += operator;
+            } else if (operator === '√') {
+                this.display += 'sqrt(';
+            } else if (operator === 'sin') {
+                this.display += 'sin(';
+            } else if (operator === 'cos') {
+                this.display += 'cos(';
+            } else if (operator === 'tan') {
+                this.display += 'tan(';
+            } else if (operator === 'log') {
+                this.display += 'log(';
+            } else if (operator === 'ln') {
+                this.display += 'ln(';
+            } else if (operator === 'pi') {
+                this.display += Math.PI.toString();
+            } else if (operator === 'e') {
+                this.display += Math.E.toString();
+            }
         }
+
     }
 }
 </script>
@@ -187,13 +207,16 @@ button:active {
     text-align: center;
     margin-top: 10px;
 }
+
 .enter {
     background-color: rgb(61, 135, 61);
 }
+
 .space {
     background-color: #4e4a4a;
 }
+
 .backspace {
-    background-color: #ac3333;   
+    background-color: #ac3333;
 }
 </style>
